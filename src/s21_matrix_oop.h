@@ -5,7 +5,7 @@
 class S21Matrix{
     private:
         double **matrix_;
-        int rows_, columns_;
+        int rows_, cols_;
     public: 
         S21Matrix();
         S21Matrix(int rows, int cols); 
@@ -22,6 +22,13 @@ class S21Matrix{
         S21Matrix CalcComplements();
         double Determinant();
         S21Matrix InverseMatrix();
+
+        S21Matrix& operator=(S21Matrix &other);
+        S21Matrix& operator=(S21Matrix &&other);
+        S21Matrix& operator=(S21Matrix other);
+        
+        S21Matrix& CreateMatrix(int rows, int cols);
+        void DeleteMatrix(S21Matrix &mtr);
 
 };
 
