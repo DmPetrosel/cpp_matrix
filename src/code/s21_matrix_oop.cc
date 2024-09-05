@@ -71,3 +71,42 @@ void S21Matrix::SubMatrix(const S21Matrix & other){
     }
 }
 
+void S21Matrix::MulNumber(const double num){
+    for(int r = 0; r < rows_; r++){
+        for(int c = 0; c < cols_; c++){
+            matrix_[r][c] *= num;
+        }
+    }
+}
+
+void S21Matrix::MulMatrix(const S21Matrix& other){
+    if(rows_<=0 || cols_ <= 0||other.rows_ <= 0 || other.cols_ <= 0){
+        throw std::invalid_argument("Values of matrices are unacceptable");
+    }
+    if(cols_!=other.rows_){
+        S21Matrix *temp = new S21Matrix(rows_, other.cols_);
+        for(int r = 0; r < rows_; r++){
+            for(int c = 0; c < other.cols_; c++){
+                for(int k = 0; k < other.rows_; k++){
+                    temp->matrix_[r][c] += matrix_[r][k]*other.matrix_[k][c];
+                }
+            }
+        }
+        S21Matrix::~S21Matrix();
+        S21Matrix(*this);
+        S21Matrix::DeleteMatrix(*temp);
+    }
+    else{
+        throw std::invalid_argument("Columns first matrix equals rows of second matrix ");
+    }
+}
+
+   S21Matrix S21Matrix::Transpose(){
+    S21Matrix o = S21Matrix(cols_,rows_);
+    for(int r = 0; r < rows_; r++){
+        for(int c = 0; c < cols_; c++){
+            o.matrix_[c][r] = matrix_[r][c];
+        }
+    }
+    return o;
+   }
