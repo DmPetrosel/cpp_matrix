@@ -44,3 +44,30 @@ S21Matrix::S21Matrix(S21Matrix && other){
     S21Matrix(*other);
     DeleteMatrix(other);
 }
+
+void S21Matrix::SumMatrix(const S21Matrix & other){
+    if(rows_ == other.rows_ && cols_==other.cols_){
+        for(int r = 0; r < rows_; r++){
+            for(int c = 0; c < cols_; c++){
+                matrix_[r][c] += other.matrix_[r][c];
+            }
+        }
+    }
+    else {
+        throw std::invalid_argument("Matices are not compatible. ");
+    }
+}
+
+void S21Matrix::SubMatrix(const S21Matrix & other){
+    if(rows_ == other.rows_ && cols_==other.cols_){
+        for(int r = 0; r < rows_; r++){
+            for(int c = 0; c < cols_; c++){
+                matrix_[r][c] -= other.matrix_[r][c];
+            }
+        }
+    }
+    else {
+        throw std::invalid_argument("Matices are not compatible. ");
+    }
+}
+
