@@ -13,6 +13,8 @@ class S21Matrix{
         S21Matrix(S21Matrix&& other);
         ~S21Matrix();
 
+        int GetCols();
+        int GetRows();
         bool EqMatrix(const S21Matrix& other);
         void SumMatrix(const S21Matrix& other);
         void SubMatrix(const S21Matrix& other);
@@ -27,7 +29,7 @@ class S21Matrix{
         S21Matrix& operator=(S21Matrix &&other);
         S21Matrix& operator=(S21Matrix other);
         
-        S21Matrix& CreateMatrix(int rows, int cols);
+        void CreateMatrix(int rows, int cols);
         void DeleteMatrix(S21Matrix &mtr);
 
 };
