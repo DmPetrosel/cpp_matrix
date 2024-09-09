@@ -14,6 +14,13 @@ int S21Matrix::GetRows(){
     return rows_;
 }
 
+double** S21Matrix::GetMatrix(){
+    return matrix_;
+}
+void S21Matrix::SetMatrixElem(int row, int col, double num){
+    matrix_[row][col] = num;
+}
+
 void S21Matrix::CreateMatrix(int rows, int cols){
      if(rows <= 0|| cols <= 0){
         throw std::invalid_argument("There is rows or cols equals or lesser of zero. ");
@@ -57,7 +64,7 @@ S21Matrix::S21Matrix(S21Matrix && other){
             matrix_[i][j]=other.matrix_[i][j];
         }
     }
-    // DeleteMatrix(other);
+    DeleteMatrix(other);
 }
 
 void S21Matrix::SumMatrix(const S21Matrix & other){
