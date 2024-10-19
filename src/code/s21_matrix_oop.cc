@@ -125,10 +125,25 @@ void S21Matrix::MulMatrix(const S21Matrix& other){
 
    S21Matrix S21Matrix::Transpose(){
     S21Matrix o = S21Matrix(cols_,rows_);
+    // printf("%d %d", cols_, rows_);
     for(int r = 0; r < rows_; r++){
         for(int c = 0; c < cols_; c++){
             o.matrix_[c][r] = matrix_[r][c];
+            // printf("sega catch");
         }
     }
     return o;
    }
+
+bool S21Matrix::EqMatrix(const S21Matrix& other){
+    if (rows_ != other.rows_ || cols_ != other.cols_)
+        return false;
+    int status = true;
+    for(int r = 0; r < rows_ && status; r++){
+        for(int c = 0; c < cols_ && status; c++){
+            if(matrix_ [r][c] != other.matrix_ [r][c])
+                status = false;
+        }
+    }
+    return status;
+}
