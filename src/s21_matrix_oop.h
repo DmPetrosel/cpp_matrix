@@ -25,6 +25,7 @@ class S21Matrix{
         void MulNumber(const double num);       // Written, Tested 
         void MulMatrix(const S21Matrix& other); //Written, Tested
         S21Matrix Transpose();                  // Written
+        double MinorOfElement(int i, int j);
         S21Matrix CalcComplements();
         double Determinant();
         S21Matrix InverseMatrix();
@@ -35,6 +36,7 @@ class S21Matrix{
         
         void CreateMatrix(int rows, int cols);
         void DeleteMatrix(S21Matrix &mtr);
+        double dabs(double num);
 
 };
 
