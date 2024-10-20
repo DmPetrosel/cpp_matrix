@@ -30,14 +30,16 @@ class S21Matrix{
         double Determinant();
         S21Matrix InverseMatrix();
 
-        S21Matrix& operator=(S21Matrix &other);
+        S21Matrix& operator=(const S21Matrix &other);
         S21Matrix& operator=(S21Matrix &&other);
-        S21Matrix& operator=(S21Matrix other);
         
         void CreateMatrix(int rows, int cols);
         void DeleteMatrix(S21Matrix &mtr);
-        double dabs(double num);
+        bool operator==(const S21Matrix &other);
+        S21Matrix MoveMatrix(S21Matrix &&other);
+        double** operator = (double** other);
 
 };
+double s21_dabs(double num);
 
 #endif // S21_MATRIX_OOP_H_

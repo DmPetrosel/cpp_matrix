@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall -Wextra -std=c++11 -Werror
+CFLAGS = -g -Wall -Wextra -std=c++17 -Werror
 LDFLAGS = -lgtest -pthread 
 TARGET = s21_matrix_oop.a
 

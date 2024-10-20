@@ -14,7 +14,10 @@ int S21Matrix::GetRows() { return rows_; }
 
 double** S21Matrix::GetMatrix() { return matrix_; }
 void S21Matrix::SetMatrixElem(int row, int col, double num) {
-  matrix_[row][col] = num;
+  if (row < rows_ && col < cols_)
+    matrix_[row][col] = num;
+  else
+    throw std::out_of_range("Out of range");
 }
 
 void S21Matrix::CreateMatrix(int rows, int cols) {
@@ -60,6 +63,22 @@ S21Matrix::S21Matrix(S21Matrix&& other) {
   }
   DeleteMatrix(other);
 }
+S21Matrix S21Matrix::MoveMatrix(S21Matrix&& other) {
+  if (cols_ == other.cols_ && rows_ == other.rows_) {
+    for (int r = 0; r < rows_; r++) {
+      for (int c = 0; c < cols_; c++) {
+        matrix_[r][c] = other.matrix_[r][c];
+        other.matrix_[r][c] = 0;
+      }
+    }
+    other.cols_ = 0;
+    other.rows_ = 0;
+    other.matrix_ = nullptr;
+  } else
+    throw std::invalid_argument("Matices are not compatible. ");
+
+  return *this;
+}
 
 void S21Matrix::SumMatrix(const S21Matrix& other) {
   if (rows_ == other.rows_ && cols_ == other.cols_) {
@@ -97,21 +116,20 @@ void S21Matrix::MulMatrix(const S21Matrix& other) {
   if (rows_ <= 0 || cols_ <= 0 || other.rows_ <= 0 || other.cols_ <= 0) {
     throw std::invalid_argument("Values of matrices are unacceptable");
   }
-  if (cols_ != other.rows_) {
-    S21Matrix* temp = new S21Matrix(rows_, other.cols_);
+  if (cols_ == other.rows_) {
+    S21Matrix temp(rows_, other.cols_);
     for (int r = 0; r < rows_; r++) {
       for (int c = 0; c < other.cols_; c++) {
-        for (int k = 0; k < other.rows_; k++) {
-          temp->matrix_[r][c] += matrix_[r][k] * other.matrix_[k][c];
+        temp.matrix_[r][c] = 0;
+        for (int k = 0; k < cols_; k++) {
+          temp.matrix_[r][c] += matrix_[r][k] * other.matrix_[k][c];
         }
       }
     }
-    S21Matrix::~S21Matrix();
-    S21Matrix(*this);
-    S21Matrix::DeleteMatrix(*temp);
+    *this = temp;
   } else {
     throw std::invalid_argument(
-        "Columns first matrix equals rows of second matrix ");
+        "Columns first matrix is not equal rows of second matrix ");
   }
 }
 
@@ -132,7 +150,11 @@ bool S21Matrix::EqMatrix(const S21Matrix& other) {
   int status = true;
   for (int r = 0; r < rows_ && status; r++) {
     for (int c = 0; c < cols_ && status; c++) {
-      if (matrix_[r][c] != other.matrix_[r][c]) status = false;
+      double num = s21_dabs((double)matrix_[r][c] - other.matrix_[r][c]);
+      double ernum = 1e-6;
+      if (num > ernum || num < 0) {
+        status = false;
+      }
     }
   }
   return status;
@@ -194,18 +216,43 @@ S21Matrix S21Matrix::CalcComplements() {
 
 double s21_dabs(double value) { return (value < 0) ? -value : value; }
 
-S21Matrix S21Matrix::InverseMatrix(){
+S21Matrix S21Matrix::InverseMatrix() {
   if (rows_ != cols_) {
     throw std::invalid_argument("Matrix is not square");
   }
-    double determinant = Determinant();
-    S21Matrix result = S21Matrix(rows_, cols_);
+  double determinant = Determinant();
+  S21Matrix result = S21Matrix(rows_, cols_);
   if (s21_dabs(determinant) > __DBL_EPSILON__) {
     result.CalcComplements();
     result.Transpose();
-    result.MulNumber(1/determinant);
+    result.MulNumber(1 / determinant);
   } else {
     throw std::invalid_argument("Matrix is not invertible");
   }
   return result;
 }
+
+S21Matrix& S21Matrix::operator=(S21Matrix&& other) {
+  if (*this == other) return *this;
+  rows_ = other.rows_;
+  cols_ = other.cols_;
+  matrix_ = other.matrix_;
+  other.rows_ = 0;
+  other.cols_ = 0;
+  other.matrix_ = nullptr;
+  return *this;
+}
+
+S21Matrix& S21Matrix::operator=(const S21Matrix& other) {
+  if (*this == other) return *this;
+  rows_ = other.rows_;
+  cols_ = other.cols_;
+  for(int r = 0; r < rows_; r++) {
+    for(int c = 0; c < cols_; c++) {
+      matrix_[r][c] = other.matrix_[r][c];
+    }
+    
+  }
+  return *this;
+}
+bool S21Matrix::operator==(const S21Matrix& other) { return EqMatrix(other); }
