@@ -182,3 +182,174 @@ TEST(s21_eq, eq_5) {
   int status = A.EqMatrix(B);
   EXPECT_FALSE(status);
 }
+
+TEST(s21_compl, compl_1) {
+  S21Matrix A = S21Matrix(3, 3);
+
+  A.SetMatrixElem(0,0, 5);
+  A.SetMatrixElem(0,1, 7);
+  A.SetMatrixElem(0,2, 1);
+  A.SetMatrixElem(1,0, -4);
+  A.SetMatrixElem(1,1, 1);
+  A.SetMatrixElem(1,2, 0);
+  A.SetMatrixElem(2,0, 2);
+  A.SetMatrixElem(2,1, 0);
+  A.SetMatrixElem(2,2, 3);
+
+  A = A.CalcComplements();
+  EXPECT_LE(s21_dabs(A.GetMatrix()[2][2] - 33), __DBL_EPSILON__);
+
+}
+TEST(s21_compl, compl_2) {
+ S21Matrix A = S21Matrix(3, 3);
+
+  A.SetMatrixElem(0,0, 1);
+  A.SetMatrixElem(0,1, 2);
+  A.SetMatrixElem(0,2, 3);
+  A.SetMatrixElem(1,0, 0);
+  A.SetMatrixElem(1,1, 4);
+  A.SetMatrixElem(1,2, 2);
+  A.SetMatrixElem(2,0, 5);
+  A.SetMatrixElem(2,1, 2);
+  A.SetMatrixElem(2,2, 1);
+
+
+  A = A.CalcComplements();
+  EXPECT_LE(s21_dabs(A.GetMatrix()[0][0] - 0), __DBL_EPSILON__);
+
+}
+TEST(s21_compl, compl_3) {
+  S21Matrix A = S21Matrix(3, 3);
+
+
+  A.SetMatrixElem(0,0,1);
+  A.SetMatrixElem(0,1,2);
+  A.SetMatrixElem(0,2,3);
+  A.SetMatrixElem(1,0,0);
+  A.SetMatrixElem(1,1,4);
+  A.SetMatrixElem(1,2,2);
+  A.SetMatrixElem(2,0,5);
+  A.SetMatrixElem(2,1,2);
+  A.SetMatrixElem(2,2,1);
+
+
+  A = A.CalcComplements();
+  EXPECT_LE(s21_dabs(A.GetMatrix()[0][1] - 10), __DBL_EPSILON__);
+}
+TEST(s21_compl, compl_4) {
+  S21Matrix A = S21Matrix(3, 3);
+  A.SetMatrixElem(0,0, 1);
+  A.SetMatrixElem(0,1, 2);
+  A.SetMatrixElem(0,2, 3);
+  A.SetMatrixElem(1,0, 0);
+  A.SetMatrixElem(1,1, 4);
+  A.SetMatrixElem(1,2, 2);
+  A.SetMatrixElem(2,0, 5);
+  A.SetMatrixElem(2,1, 2);
+  A.SetMatrixElem(2,2, 1);
+
+A = A.CalcComplements();
+
+  EXPECT_LE(s21_dabs(A.GetMatrix()[0][2] + 20), __DBL_EPSILON__);
+}
+
+TEST(s21_compl, compl_5) {
+ S21Matrix A = S21Matrix(2, 3);
+  A.SetMatrixElem(0,0, 1);
+  A.SetMatrixElem(0,1, 2);
+  A.SetMatrixElem(0,2, 3);
+  A.SetMatrixElem(1,0, 0);
+  A.SetMatrixElem(1,1, 4);
+  A.SetMatrixElem(1,2, 2);
+
+
+EXPECT_ANY_THROW(A.CalcComplements());
+}
+
+TEST(s21_det, det_1) {
+  S21Matrix A = S21Matrix(3, 3);
+
+
+  A.SetMatrixElem(0,0, 1);
+  A.SetMatrixElem(0,1, 2);
+  A.SetMatrixElem(0,2, 3);
+  A.SetMatrixElem(1,0, 4);
+  A.SetMatrixElem(1,1, 5);
+  A.SetMatrixElem(1,2, 6);
+  A.SetMatrixElem(2,0, 7);
+  A.SetMatrixElem(2,1, 8);
+  A.SetMatrixElem(2,2, 9);
+
+  EXPECT_LE(s21_dabs(A.Determinant() - 0), __DBL_EPSILON__);
+}
+TEST(s21_det, det_2) {
+S21Matrix A = S21Matrix(3, 3);
+  A.SetMatrixElem(0,0, 5);
+  A.SetMatrixElem(0,1, 6);
+  A.SetMatrixElem(0,2, 7);
+  A.SetMatrixElem(1,0, 8);
+  A.SetMatrixElem(1,1, 9);
+  A.SetMatrixElem(1,2, 0);
+  A.SetMatrixElem(2,0, 1);
+  A.SetMatrixElem(2,1, 2);
+  A.SetMatrixElem(2,2, 3);
+
+  EXPECT_LE(s21_dabs(A.Determinant()- 40), __DBL_EPSILON__);
+}
+TEST(s21_det, det_3) {
+  S21Matrix A = S21Matrix(2, 3);
+
+  A.SetMatrixElem(0,0, 1);
+  A.SetMatrixElem(0,1, 2);
+  A.SetMatrixElem(0,2, 3);
+  A.SetMatrixElem(1,0, 0);
+  A.SetMatrixElem(1,1, 4);
+  A.SetMatrixElem(1,2, 2);
+
+  EXPECT_ANY_THROW(A.Determinant());
+}
+
+TEST(s21_inverseб , inverse_1) {
+  S21Matrix A = S21Matrix(3, 3);
+  A.SetMatrixElem(0,0, 2);
+  A.SetMatrixElem(0,1, 5);
+  A.SetMatrixElem(0,2, 7);
+  A.SetMatrixElem(1,0, 6);
+  A.SetMatrixElem(1,1, 3);
+  A.SetMatrixElem(1,2, 4);
+  A.SetMatrixElem(2,0, 5);
+  A.SetMatrixElem(2,1, -2);
+  A.SetMatrixElem(2,2, -3);
+
+  A = A.InverseMatrix();
+
+  EXPECT_LE(s21_dabs(A.GetMatrix()[0][0] - 1), __DBL_EPSILON__);
+}
+TEST(s21_inverse, inverse_2) {
+S21Matrix A = S21Matrix(3, 3);
+
+  A.SetMatrixElem(0,0, 2);
+  A.SetMatrixElem(0,1, 5);
+  A.SetMatrixElem(0,2, 7);
+  A.SetMatrixElem(1,0, 6);
+  A.SetMatrixElem(1,1, 3);
+  A.SetMatrixElem(1,2, 4);
+  A.SetMatrixElem(2,0, 5);
+  A.SetMatrixElem(2,1, -2);
+  A.SetMatrixElem(2,2, -3);
+
+A = A.InverseMatrix();
+  EXPECT_LE(s21_dabs(A.GetMatrix()[1][0] + 38), __DBL_EPSILON__);
+}
+TEST(s21_inverse, inverse_3) {
+  S21Matrix A = S21Matrix(2, 3);
+  
+  A.SetMatrixElem(0,0, 1);
+  A.SetMatrixElem(0,1, 2);
+  A.SetMatrixElem(0,2, 3);
+  A.SetMatrixElem(1,0, 0);
+  A.SetMatrixElem(1,1, 4);
+  A.SetMatrixElem(1,2, 2);
+
+EXPECT_ANY_THROW(A.InverseMatrix());
+}

@@ -6,14 +6,14 @@
 
 |+/-| Operation | Description | Exceptional situations |
 |-| ----------- | ----------- | ----------- |
-|testing| `bool EqMatrix(const S21Matrix& other)` | Checks matrices for equality with each other. |  |
+|+| `bool EqMatrix(const S21Matrix& other)` | Checks matrices for equality with each other. |  |
 |+| `void SumMatrix(const S21Matrix& other)` | Adds the second matrix to the current one | different matrix dimensions. |
 |+| `void SubMatrix(const S21Matrix& other)` | Subtracts another matrix from the current one | different matrix dimensions. |
 |+| `void MulNumber(const double num) ` | Multiplies the current matrix by a number. |  |
 |+| `void MulMatrix(const S21Matrix& other)` | Multiplies the current matrix by the second matrix. | The number of columns of the first matrix is not equal to the number of rows of the second matrix. |
 |+| `S21Matrix Transpose()` | Creates a new transposed matrix from the current one and returns it. |  |
-|testing| `S21Matrix CalcComplements()` | Calculates the algebraic addition matrix of the current one and returns it. | The matrix is not square. |
-|testing| `double Determinant()` | Calculates and returns the determinant of the current matrix. | The matrix is not square. |
+|+| `S21Matrix CalcComplements()` | Calculates the algebraic addition matrix of the current one and returns it. | The matrix is not square. |
+|+| `double Determinant()` | Calculates and returns the determinant of the current matrix. | The matrix is not square. |
 |testing| `S21Matrix InverseMatrix()` | Calculates and returns the inverse matrix. | Matrix determinant is 0. |
 
 

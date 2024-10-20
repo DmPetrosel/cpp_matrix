@@ -12,7 +12,7 @@ S21Matrix::S21Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
 int S21Matrix::GetCols() { return cols_; }
 int S21Matrix::GetRows() { return rows_; }
 
-double** S21Matrix::GetMatrix() { return matrix_; }
+double** S21Matrix::GetMatrix() { try { return matrix_; } catch(std::exception& e) {  std::cerr << e.what(); return nullptr; } }
 void S21Matrix::SetMatrixElem(int row, int col, double num) {
   if (row < rows_ && col < cols_)
     matrix_[row][col] = num;
@@ -32,7 +32,17 @@ void S21Matrix::CreateMatrix(int rows, int cols) {
     matrix_[i] = new double[cols];
   }
 }
-S21Matrix::~S21Matrix() { DeleteMatrix(*this); }
+S21Matrix::~S21Matrix() { 
+    if (matrix_ != nullptr) {
+    for (int i = 0; i < rows_; i++) {
+      if (matrix_[i]) delete[] matrix_[i];
+    }
+    delete[] matrix_;
+    matrix_ = nullptr;
+    rows_ = 0;
+    cols_ = 0; 
+    }
+}
 void S21Matrix::DeleteMatrix(S21Matrix& mtr) {
   if (mtr.matrix_ != nullptr) {
     for (int i = 0; i < rows_; i++) {
@@ -61,7 +71,7 @@ S21Matrix::S21Matrix(S21Matrix&& other) {
       matrix_[i][j] = other.matrix_[i][j];
     }
   }
-  DeleteMatrix(other);
+  other.~S21Matrix();
 }
 S21Matrix S21Matrix::MoveMatrix(S21Matrix&& other) {
   if (cols_ == other.cols_ && rows_ == other.rows_) {
@@ -177,8 +187,8 @@ double S21Matrix::MinorOfElement(int i, int j) {
       result.matrix_[r - subr][c - subc] = matrix_[r][c];
     }
   }
-  double double_res = 0;
-  result.Determinant();
+  double double_res = result.Determinant();
+  result.~S21Matrix();
   return double_res;
 }
 
@@ -192,10 +202,11 @@ double S21Matrix::Determinant() {
   } else if (cols_ == 2) {
     result = matrix_[0][0] * matrix_[1][1] - matrix_[0][1] * matrix_[1][0];
   } else {
-    S21Matrix complement = CalcComplements();
+    S21Matrix complement = this->CalcComplements();
     for (int i = 0; i < cols_; i++) {
       result += matrix_[0][i] * complement.matrix_[0][i];
     }
+    complement.~S21Matrix();
   }
   return result;
 }
@@ -208,7 +219,7 @@ S21Matrix S21Matrix::CalcComplements() {
   for (int r = 0; r < rows_; r++) {
     for (int c = 0; c < cols_; c++) {
       result.matrix_[r][c] =
-          MinorOfElement(r, c) * (((r + c) % 2 == 0) ? 1 : -1);
+          this->MinorOfElement(r, c) * (((r + c) % 2 == 0) ? 1 : -1);
     }
   }
   return result;
@@ -220,11 +231,12 @@ S21Matrix S21Matrix::InverseMatrix() {
   if (rows_ != cols_) {
     throw std::invalid_argument("Matrix is not square");
   }
-  double determinant = Determinant();
-  S21Matrix result = S21Matrix(rows_, cols_);
+  double determinant = 0;
+  determinant = this->Determinant();
+  S21Matrix result = S21Matrix(*this);
   if (s21_dabs(determinant) > __DBL_EPSILON__) {
-    result.CalcComplements();
-    result.Transpose();
+    result = result.CalcComplements();
+    result = result.Transpose();
     result.MulNumber(1 / determinant);
   } else {
     throw std::invalid_argument("Matrix is not invertible");
@@ -234,9 +246,8 @@ S21Matrix S21Matrix::InverseMatrix() {
 
 S21Matrix& S21Matrix::operator=(S21Matrix&& other) {
   if (*this == other) return *this;
-  rows_ = other.rows_;
-  cols_ = other.cols_;
-  matrix_ = other.matrix_;
+  *this = other;
+  other.~S21Matrix();
   other.rows_ = 0;
   other.cols_ = 0;
   other.matrix_ = nullptr;
@@ -245,8 +256,8 @@ S21Matrix& S21Matrix::operator=(S21Matrix&& other) {
 
 S21Matrix& S21Matrix::operator=(const S21Matrix& other) {
   if (*this == other) return *this;
-  rows_ = other.rows_;
-  cols_ = other.cols_;
+  this->~S21Matrix();
+  CreateMatrix(other.rows_, other.cols_);
   for(int r = 0; r < rows_; r++) {
     for(int c = 0; c < cols_; c++) {
       matrix_[r][c] = other.matrix_[r][c];
