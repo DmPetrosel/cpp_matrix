@@ -38,8 +38,8 @@ class S21Matrix{
         bool operator==(const S21Matrix &other);
         S21Matrix MoveMatrix(S21Matrix &&other);
         double** operator = (double** other);
+        double GetElem(int row, int col);
 
 };
 double s21_dabs(double num);
-
 #endif // S21_MATRIX_OOP_H_

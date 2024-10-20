@@ -7,8 +7,8 @@ TEST(sum, sum_1) {
   B.SetMatrixElem(0, 0, 1.0);
   B.SetMatrixElem(0, 1, 2.0);
   A.SumMatrix(B);
-  EXPECT_DOUBLE_EQ(A.GetMatrix()[0][0], 2.0);
-  EXPECT_DOUBLE_EQ(A.GetMatrix()[0][1], 4.0);
+  EXPECT_DOUBLE_EQ(A.GetElem(0,0), 2.0);
+  EXPECT_DOUBLE_EQ(A.GetElem(0,1), 4.0);
 }
 
 TEST(sum, sum_2) {
@@ -29,8 +29,8 @@ TEST(sub, sub_1) {
   B.SetMatrixElem(0, 0, 1.0);
   B.SetMatrixElem(0, 1, 2.0);
   A.SubMatrix(B);
-  EXPECT_DOUBLE_EQ(A.GetMatrix()[0][0], 0.0);
-  EXPECT_DOUBLE_EQ(A.GetMatrix()[0][1], 2.0);
+  EXPECT_DOUBLE_EQ(A.GetElem(0,0), 0.0);
+  EXPECT_DOUBLE_EQ(A.GetElem(0,1), 2.0);
 }
 
 TEST(sub, sub_2) {
@@ -50,8 +50,8 @@ TEST(mulNumber, muln_1) {
   A.SetMatrixElem(0, 1, 4.0);
   double number = 3;
   A.MulNumber(number);
-  EXPECT_DOUBLE_EQ(A.GetMatrix()[0][0], 3.0);
-  EXPECT_DOUBLE_EQ(A.GetMatrix()[0][1], 12.0);
+  EXPECT_DOUBLE_EQ(A.GetElem(0,0), 3.0);
+  EXPECT_DOUBLE_EQ(A.GetElem(0,1), 12.0);
 }
 
 TEST(multMatrix, mm_1) {
@@ -81,15 +81,15 @@ TEST(multMatrix, mm_2) {
   B.SetMatrixElem(1, 1, 3.0);
   B.SetMatrixElem(1, 2, 4.0);
   A.MulMatrix(B);
-  EXPECT_LE(s21_dabs( 9.0 - A.GetMatrix()[0][0]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(11.0 - A.GetMatrix()[0][1]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(17.0 - A.GetMatrix()[0][2]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(12.0 - A.GetMatrix()[1][0]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(13.0 - A.GetMatrix()[1][1]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(22.0 - A.GetMatrix()[1][2]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(15.0 - A.GetMatrix()[2][0]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(15.0 - A.GetMatrix()[2][1]), __DBL_EPSILON__);
-  EXPECT_LE(s21_dabs(27.0 - A.GetMatrix()[2][2]), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs( 9.0 - A.GetElem(0,0)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(11.0 - A.GetElem(0,1)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(17.0 - A.GetElem(0,2)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(12.0 - A.GetElem(1,0)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(13.0 - A.GetElem(1,1)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(22.0 - A.GetElem(1,2)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(15.0 - A.GetElem(2,0)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(15.0 - A.GetElem(2,1)), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(27.0 - A.GetElem(2,2)), __DBL_EPSILON__);
   A.~S21Matrix();
   B.~S21Matrix();
 }
@@ -101,7 +101,8 @@ TEST(s21_eq, eq_1) {
   double num = 5.51;
   for (int r = 0; r < A.GetRows(); r++) {
     for (int c = 0; c < A.GetCols(); c++) {
-      A.GetMatrix()[r][c] = B.GetMatrix()[r][c] = (r + c) * num;
+      A.SetMatrixElem(r,c, (r + c) * num);
+      B.SetMatrixElem(r,c, (r + c) * num);
     }
   }
   int status = A.EqMatrix(B);
@@ -115,10 +116,11 @@ TEST(s21_eq, eq_2) {
   double num = 5.51;
   for (int r = 0; r < A.GetRows(); r++) {
     for (int c = 0; c < A.GetCols(); c++) {
-      A.GetMatrix()[r][c] = B.GetMatrix()[r][c] = (r + c) * num;
+     A.SetMatrixElem(r,c, (r + c) * num);
+      B.SetMatrixElem(r,c, (r + c) * num);
     }
   }
-  A.GetMatrix()[0][1] = 4;
+  A.SetMatrixElem(0,1, 4);
   int status = A.EqMatrix(B);
   EXPECT_FALSE(status);
 }
@@ -197,7 +199,7 @@ TEST(s21_compl, compl_1) {
   A.SetMatrixElem(2,2, 3);
 
   A = A.CalcComplements();
-  EXPECT_LE(s21_dabs(A.GetMatrix()[2][2] - 33), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(A.GetElem(2,2) - 33), __DBL_EPSILON__);
 
 }
 TEST(s21_compl, compl_2) {
@@ -215,7 +217,7 @@ TEST(s21_compl, compl_2) {
 
 
   A = A.CalcComplements();
-  EXPECT_LE(s21_dabs(A.GetMatrix()[0][0] - 0), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(A.GetElem(0,0) - 0), __DBL_EPSILON__);
 
 }
 TEST(s21_compl, compl_3) {
@@ -234,7 +236,7 @@ TEST(s21_compl, compl_3) {
 
 
   A = A.CalcComplements();
-  EXPECT_LE(s21_dabs(A.GetMatrix()[0][1] - 10), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(A.GetElem(0,1)- 10), __DBL_EPSILON__);
 }
 TEST(s21_compl, compl_4) {
   S21Matrix A = S21Matrix(3, 3);
@@ -250,7 +252,7 @@ TEST(s21_compl, compl_4) {
 
 A = A.CalcComplements();
 
-  EXPECT_LE(s21_dabs(A.GetMatrix()[0][2] + 20), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(A.GetElem(0,2) + 20), __DBL_EPSILON__);
 }
 
 TEST(s21_compl, compl_5) {
@@ -323,7 +325,7 @@ TEST(s21_inverseб , inverse_1) {
 
   A = A.InverseMatrix();
 
-  EXPECT_LE(s21_dabs(A.GetMatrix()[0][0] - 1), __DBL_EPSILON__);
+  EXPECT_LE(s21_dabs(A.GetElem(0,0)- 1), __DBL_EPSILON__);
 }
 TEST(s21_inverse, inverse_2) {
 S21Matrix A = S21Matrix(3, 3);
@@ -339,7 +341,7 @@ S21Matrix A = S21Matrix(3, 3);
   A.SetMatrixElem(2,2, -3);
 
 A = A.InverseMatrix();
-  EXPECT_LE(s21_dabs(A.GetMatrix()[1][0] + 38), __DBL_EPSILON__);
+  EXPECT_DOUBLE_EQ(A.GetElem(1, 0), -38);
 }
 TEST(s21_inverse, inverse_3) {
   S21Matrix A = S21Matrix(2, 3);

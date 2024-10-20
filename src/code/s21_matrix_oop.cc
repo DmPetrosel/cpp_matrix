@@ -227,6 +227,9 @@ S21Matrix S21Matrix::CalcComplements() {
 
 double s21_dabs(double value) { return (value < 0) ? -value : value; }
 
+double S21Matrix::GetElem(int row, int col){
+  return matrix_[row][col];
+}
 S21Matrix S21Matrix::InverseMatrix() {
   if (rows_ != cols_) {
     throw std::invalid_argument("Matrix is not square");
