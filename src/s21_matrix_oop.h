@@ -39,6 +39,16 @@ class S21Matrix{
         S21Matrix MoveMatrix(S21Matrix &&other);
         double** operator = (double** other);
         double GetElem(int row, int col);
+        S21Matrix operator + (const S21Matrix &other);
+        S21Matrix operator - (const S21Matrix &other);
+        S21Matrix operator * (const S21Matrix &other);
+        S21Matrix operator * (const double num);
+        S21Matrix operator += (const S21Matrix &other);
+        S21Matrix operator -= (const S21Matrix &other);
+        S21Matrix operator *= (const S21Matrix &other);
+        S21Matrix operator *= (const double num);
+        double &operator() (int i, int j);
+        double &operator() (int i, int j) const;
 
 };
 double s21_dabs(double num);

@@ -14,7 +14,7 @@
 |+| `S21Matrix Transpose()` | Creates a new transposed matrix from the current one and returns it. |  |
 |+| `S21Matrix CalcComplements()` | Calculates the algebraic addition matrix of the current one and returns it. | The matrix is not square. |
 |+| `double Determinant()` | Calculates and returns the determinant of the current matrix. | The matrix is not square. |
-|testing| `S21Matrix InverseMatrix()` | Calculates and returns the inverse matrix. | Matrix determinant is 0. |
+|+| `S21Matrix InverseMatrix()` | Calculates and returns the inverse matrix. | Matrix determinant is 0. |
 
 
 ### \\/ Done
@@ -32,15 +32,15 @@
 
 |+/-| Operator | Description | Exceptional situations |
 |-| ----------- | ----------- | ----------- |
-|-| `+`      | Addition of two matrices. | Different matrix dimensions. |
-|-| `-`   | Subtraction of one matrix from another. | Different matrix dimensions. |
-|-| `*`  | Matrix multiplication and matrix multiplication by a number. | The number of columns of the first matrix does not equal the number of |rows of the second matrix. |
-|-| `==`  | Checks for matrices equality (`EqMatrix`). | |
-|-| `=`  | Assignment of values from one matrix to another one. | |
-|-| `+=`  | Addition assignment (`SumMatrix`) | different matrix dimensions. |
-|-| `-=`  | Difference assignment (`SubMatrix`) | different matrix dimensions. |
-|-| `*=`  | Multiplication assignment (`MulMatrix`/`MulNumber`). | The number of columns of the first matrix does not equal the number of rows of the second matrix. |
-|-| `(int i, int j)`  | Indexation by matrix elements (row, column). | Index is outside the matrix. |
+|+| `+`      | Addition of two matrices. | Different matrix dimensions. |
+|+| `-`   | Subtraction of one matrix from another. | Different matrix dimensions. |
+|+| `*`  | Matrix multiplication and matrix multiplication by a number. | The number of columns of the first matrix does not equal the number of |rows of the second matrix. |
+|+| `==`  | Checks for matrices equality (`EqMatrix`). | |
+|+| `=`  | Assignment of values from one matrix to another one. | |
+|+| `+=`  | Addition assignment (`SumMatrix`) | different matrix dimensions. |
+|+| `-=`  | Difference assignment (`SubMatrix`) | different matrix dimensions. |
+|+| `*=`  | Multiplication assignment (`MulMatrix`/`MulNumber`). | The number of columns of the first matrix does not equal the number of rows of the second matrix. |
+|+| `(int i, int j)`  | Indexation by matrix elements (row, column). | Index is outside the matrix. |
 
 
 ## Chapter III
@@ -48,14 +48,14 @@
 ## Part 1. Implementation of the s21_matrix_oop.h library functions
 |+/-|Position|
 |---|---|
-|-|- The program must be developed in C++ language of C++17 standard using gcc compiler;|
+|+|- The program must be developed in C++ language of C++17 standard using gcc compiler;|
 |+|- The program code must be located in the src folder;|
 |+|- When writing code it is necessary to follow the Google style;|
 |+|- Implement the matrix as an `S21Matrix` class;|
 |+|- Use only the `matrix_`, `rows_` and `cols_` fields as private;|
-|...|- Implement the access to private fields `rows_` and `cols_` via accessor and mutator. If the matrix increases in size, it is filled with| zeros. If it decreases in size, the excess is simply discarded;
+|+|- Implement the access to private fields `rows_` and `cols_` via accessor and mutator. If the matrix increases in size, it is filled with| zeros. If it decreases in size, the excess is simply discarded;
 |+|- Make it as a static library (with s21_matrix_oop.h header file);|
-|...|- Implement the operations described [above](#matrix-operations);|
-|-|- Overload the operators according to the table in the chapter [above](#matrix-operations);|
-|...|- Prepare full coverage of library functions code with unit-tests using the GTest library;|
-|-|- Provide a Makefile for building the library and tests (with targets all, clean, test, s21_matrix_oop.a).|
+|+|- Implement the operations described [above](#matrix-operations);|
+|+|- Overload the operators according to the table in the chapter [above](#matrix-operations);|
+|+|- Prepare full coverage of library functions code with unit-tests using the GTest library;|
+|+|- Provide a Makefile for building the library and tests (with targets all, clean, test, s21_matrix_oop.a).|

@@ -1,4 +1,5 @@
 #include "../s21_matrix_oop.h"
+#include <cstring>
 
 S21Matrix::S21Matrix() {
   rows_ = 0;
@@ -14,10 +15,13 @@ int S21Matrix::GetRows() { return rows_; }
 
 double** S21Matrix::GetMatrix() { try { return matrix_; } catch(std::exception& e) {  std::cerr << e.what(); return nullptr; } }
 void S21Matrix::SetMatrixElem(int row, int col, double num) {
-  if (row < rows_ && col < cols_)
+  // if (row < rows_ && col < cols_)
+  try{
     matrix_[row][col] = num;
-  else
-    throw std::out_of_range("Out of range");
+  }
+  catch (std::exception &e) {
+    throw;
+  }
 }
 
 void S21Matrix::CreateMatrix(int rows, int cols) {
@@ -27,10 +31,20 @@ void S21Matrix::CreateMatrix(int rows, int cols) {
   }
   rows_ = rows;
   cols_ = cols;
-  matrix_ = new double*[rows];
-  for (int i = 0; i < rows; i++) {
-    matrix_[i] = new double[cols];
+  // matrix_ = new double*[rows];
+  // for (int i = 0; i < rows; i++) {
+  //   matrix_[i] = new double[cols];
+  // std::fill(matrix_[i], matrix_[i] + cols, 0.0);
+  // }
+    // std::memset(matrix_[i], 0, sizeof(double)*cols);
+      matrix_ = new double*[rows_];
+  if (!matrix_) throw std::out_of_range("Memory is dont allocate");
+  for (int i = 0; i < rows_; ++i) {
+    matrix_[i] = new double[cols_];
+    if (!matrix_[i]) throw std::out_of_range("Memory is dont allocate");
+    else std::memset(matrix_[i], 0, sizeof(double) *cols_);
   }
+
 }
 S21Matrix::~S21Matrix() { 
     if (matrix_ != nullptr) {
@@ -42,17 +56,6 @@ S21Matrix::~S21Matrix() {
     rows_ = 0;
     cols_ = 0; 
     }
-}
-void S21Matrix::DeleteMatrix(S21Matrix& mtr) {
-  if (mtr.matrix_ != nullptr) {
-    for (int i = 0; i < rows_; i++) {
-      if (mtr.matrix_[i]) delete[] mtr.matrix_[i];
-    }
-    delete[] mtr.matrix_;
-    mtr.matrix_ = nullptr;
-    mtr.rows_ = 0;
-    mtr.cols_ = 0;
-  }
 }
 
 S21Matrix::S21Matrix(const S21Matrix& other) {
@@ -73,22 +76,7 @@ S21Matrix::S21Matrix(S21Matrix&& other) {
   }
   other.~S21Matrix();
 }
-S21Matrix S21Matrix::MoveMatrix(S21Matrix&& other) {
-  if (cols_ == other.cols_ && rows_ == other.rows_) {
-    for (int r = 0; r < rows_; r++) {
-      for (int c = 0; c < cols_; c++) {
-        matrix_[r][c] = other.matrix_[r][c];
-        other.matrix_[r][c] = 0;
-      }
-    }
-    other.cols_ = 0;
-    other.rows_ = 0;
-    other.matrix_ = nullptr;
-  } else
-    throw std::invalid_argument("Matices are not compatible. ");
 
-  return *this;
-}
 
 void S21Matrix::SumMatrix(const S21Matrix& other) {
   if (rows_ == other.rows_ && cols_ == other.cols_) {
@@ -193,7 +181,7 @@ double S21Matrix::MinorOfElement(int i, int j) {
 }
 
 double S21Matrix::Determinant() {
-  double result;
+  double result = 0.0;
   if (rows_ != cols_) {
     throw std::invalid_argument("Matrix is not square");
   }
@@ -270,3 +258,47 @@ S21Matrix& S21Matrix::operator=(const S21Matrix& other) {
   return *this;
 }
 bool S21Matrix::operator==(const S21Matrix& other) { return EqMatrix(other); }
+
+S21Matrix S21Matrix::operator+(const S21Matrix &other){
+    S21Matrix result = S21Matrix(*this);
+    result.SumMatrix(other);
+    return result;
+}
+S21Matrix S21Matrix::operator - (const S21Matrix &other){
+  S21Matrix result = S21Matrix(*this);
+  result.SubMatrix(other);
+  return result;
+}
+S21Matrix S21Matrix::operator * (const S21Matrix &other){
+  S21Matrix result = S21Matrix(*this);
+  result.MulMatrix(other);
+  return result;
+}
+S21Matrix S21Matrix::operator * (const double num){
+  S21Matrix result = S21Matrix(*this);
+  result.MulNumber(num);
+  return result;
+}
+S21Matrix S21Matrix::operator += (const S21Matrix &other){
+  SumMatrix(other);
+  return *this;
+}
+S21Matrix S21Matrix::operator -= (const S21Matrix &other){
+  SubMatrix(other);
+  return *this;
+}
+S21Matrix S21Matrix::operator *= (const S21Matrix &other){
+  MulMatrix(other);
+  return *this;
+}
+S21Matrix S21Matrix::operator *= (const double num){
+  MulNumber(num);
+  return *this;
+}
+double &S21Matrix::operator()(int i, int j) const { return matrix_[i][j]; }
+
+double &S21Matrix::operator()(int i, int j) {
+  if (i < 0 || j < 0 || i > rows_ - 1 || j > cols_ - 1)
+    throw std::out_of_range("Incorrect matrix's index");
+  return matrix_[i][j];
+}
